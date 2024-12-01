@@ -1,9 +1,12 @@
 {
   "scripts": {
-    "start": "ts-node src/*.ts"
+    "start": "ts-node src/**/*.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "fs": "^0.0.1-security",
+    "prettier": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }
