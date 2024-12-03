@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "ts-node src/**/*.ts",
+    "start": "ts-node src/ex_02/index.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
