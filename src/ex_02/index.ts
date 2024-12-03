@@ -24,7 +24,7 @@ interface ResultItem {
 const computeDirection = (v1: number, v2: number): Direction =>
   v1 > v2 ? Direction.LEFT : Direction.RIGHT;
 
-function compute(input: number[][]): ResultItem[] | undefined {
+function compute(input: number[][]): ResultItem[] {
   return input.map((v: number[], i: number) => {
     let direction = Direction.UNKNOWN;
     for (let idx = 0; idx < input[i].length; idx++) {
@@ -37,22 +37,31 @@ function compute(input: number[][]): ResultItem[] | undefined {
         direction = computeDirection(input[i][idx], input[i][idx + 1]);
       // Direction has change --> break
       const currentDirection = computeDirection(input[i][idx], input[i][idx + 1]);
-      if (direction !== Direction.UNKNOWN && direction !== currentDirection) return { result: false, section: i, index: idx }
+      if (direction !== Direction.UNKNOWN && direction !== currentDirection) return { result: false, section: i, index: idx + 1 }
       // Control jump
-      if (Math.abs(input[i][idx] - input[i][idx + 1]) > 3) return { result: false, section: i, index: idx }
+      if (Math.abs(input[i][idx] - input[i][idx + 1]) > 3) return { result: false, section: i, index: idx + 1 }
     }
-  })
+  }).map(v => (v as ResultItem))
 }
 
 /* PART A */
 function part_A(input: number[][]) {
-  return compute(input).filter(v => v).length
+  return compute(input).filter(v => v.result).length
 }
 
 /* PART B */
-function part_B(listA: number[], listB: number[]) {
+function part_B(input: number[][]) {
+  // We start by getting the UNSAFE result only
+  const computed: ResultItem[] = compute(input)
+  // We rebuild the resultArray without the index that makes the computation break
+  const rebuild: number[][] = computed.filter(v => !v.result).map(v => {
+    let element: number[] = input[v.section]
+    delete element[v.index]
+    return element.filter(v => v)
+  })
 
+  return compute(rebuild).filter(v => v.result).length + part_A(input)
 }
 
 printResult('Part 02 A', part_A(input))
-//printResult('Part 02 B', part_B(input).filter((v) => v).length);
+printResult('Part 02 B', part_B(input))
